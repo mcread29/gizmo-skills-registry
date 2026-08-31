@@ -1,0 +1,15 @@
+{
+  "extensionsDir": "extensions",
+  "extensions": [
+    {
+      "id": "pstack",
+      "name": "pstack Skills",
+      "description": "Lauren Tan's rigorous engineering workflows and principles"
+    },
+    {
+      "id": "matt-pocock-skills",
+      "name": "Matt Pocock Skills",
+      "description": "Engineering and productivity skills for real-world software work"
+    }
+  ]
+}
