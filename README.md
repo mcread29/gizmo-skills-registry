@@ -37,10 +37,4 @@ Both collections contain a skill named `tdd`. Enabling both copies at once cause
 
 ## Install
 
-Add this repository path in **Settings → Extensions**:
-
-```text
-C:/Users/mchan/projects/gizmo-skills-registry
-```
-
-Then install either collection and enable only the individual skills you want.
+Add this repository's Git URL or local checkout path in **Settings → Extensions**. Then install either collection and enable only the individual skills you want.
