@@ -1,0 +1,71 @@
+name: Sync upstream skills
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 9 * * 1'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: sync-upstream-skills
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out registry
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Sync pinned snapshots to upstream HEAD
+        run: node scripts/sync-upstreams.mjs
+
+      - name: Detect changes
+        id: changes
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Commit update branch
+        if: steps.changes.outputs.changed == 'true'
+        env:
+          BRANCH: automation/sync-upstream-skills
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B "$BRANCH"
+          git add extensions upstream-lock.json
+          git commit -m "sync upstream skills"
+          git push --force origin "HEAD:$BRANCH"
+
+      - name: Open or update pull request
+        if: steps.changes.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH: automation/sync-upstream-skills
+        shell: bash
+        run: |
+          if gh pr view "$BRANCH" >/dev/null 2>&1; then
+            gh pr edit "$BRANCH" \
+              --title "Sync upstream skills" \
+              --body "Automated refresh of the vendored pstack and Matt Pocock skill snapshots. Review upstream changes before merging."
+          else
+            gh pr create \
+              --head "$BRANCH" \
+              --base "$GITHUB_REF_NAME" \
+              --title "Sync upstream skills" \
+              --body "Automated refresh of the vendored pstack and Matt Pocock skill snapshots. Review upstream changes before merging."
+          fi
