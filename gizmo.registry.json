@@ -10,6 +10,11 @@
       "id": "matt-pocock-skills",
       "name": "Matt Pocock Skills",
       "description": "Engineering and productivity skills for real-world software work"
+    },
+    {
+      "id": "agent-journal",
+      "name": "Agent Journal",
+      "description": "Backfill a repo's past Pi and Claude Code sessions into an append-only transcript journal"
     }
   ]
 }
