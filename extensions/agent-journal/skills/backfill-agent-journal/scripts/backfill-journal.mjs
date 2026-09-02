@@ -143,6 +143,16 @@ function normalizeSegment(entries) {
 
 // --------------------------------------------------------- source discovery
 
+/**
+ * Windows paths are case-insensitive, and a transcript records whatever case
+ * the session was started with. Comparing exactly means a --workspace spelled
+ * with different capitalisation silently matches nothing.
+ */
+const samePath = (left, right) =>
+	process.platform === 'win32'
+		? left.toLowerCase() === right.toLowerCase()
+		: left === right;
+
 /** Both tools nest sessions in a directory per project; a flat scan finds none. */
 async function jsonlFiles(dir, depth = 2) {
 	let entries;
@@ -414,7 +424,7 @@ async function collect(args, workspace) {
 					basename(file, '.jsonl'),
 				);
 				// The directory name is a mangled path; cwd in the file is exact.
-				if (parsed && resolve(parsed.cwd || '') === workspace) {
+				if (parsed && samePath(resolve(parsed.cwd || ''), workspace)) {
 					found.push({ ...parsed, source: 'pi-archive' });
 				}
 			}
@@ -428,7 +438,7 @@ async function collect(args, workspace) {
 				await readFile(file, 'utf8'),
 				basename(file, '.jsonl'),
 			);
-			if (parsed && resolve(parsed.cwd || '') === workspace) {
+			if (parsed && samePath(resolve(parsed.cwd || ''), workspace)) {
 				found.push({ ...parsed, source: 'claude-code' });
 			}
 		}
