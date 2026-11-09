@@ -2,11 +2,11 @@
   "pstack": {
     "repository": "https://github.com/cursor/plugins",
     "path": "pstack/skills",
-    "commit": "b9ddc83c32972210b8a94d389130713e8eed346e"
+    "commit": "6b0300214a09fd6029cfb7077043125758cd1fd2"
   },
   "matt-pocock-skills": {
     "repository": "https://github.com/mattpocock/skills",
     "path": "skills",
-    "commit": "6654f6b60cd9d5be8b54c6fafe44346dabeb3b76"
+    "commit": "4ae2317ddb22b046e26455e4f9c9b3aaaf62212d"
   }
 }
